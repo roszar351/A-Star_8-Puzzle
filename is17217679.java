@@ -24,9 +24,6 @@ public class is17217679
         {
             endState = JOptionPane.showInputDialog("Wrong format, renter the end state: ");
         }
-
-        showState(startState);
-        showState(endState);
     }
 
     public static boolean validateInput(String in)
@@ -35,9 +32,30 @@ public class is17217679
     }
 
     // At most 4 possible movements print them into console
-    public static void possibleMovements(String state)
+    public static void possibleMovements(int[][] state)
     {
+        boolean stop = false;
+        showState(state);
+        int i = 0, j = 0;
 
+        for(i = 0; i < state.length && !stop; i++)
+        {
+            for(j = 0; j < state[i].length && !stop; j++)
+            {
+                stop = (state[i][j] == 0);
+            }
+        }
+        i--;
+        j--;
+
+        if(i - 1 > -1)
+            System.out.println(state[i-1][j] + " to the south");
+        if(i + 1 < 3)
+            System.out.println(state[i+1][j] + " to the north");
+        if(j - 1 > -1)
+            System.out.println(state[i][j - 1] + " to the east");
+        if(j + 1 < 3)
+            System.out.println(state[i][j + 1] + " to the west");
     }
 
     // Numbers out of place or how far each number is from its final state
@@ -47,21 +65,21 @@ public class is17217679
     }
 
     // This might not need to be here, g is which 
-    // state u are on start state = 0, then next states are 1 etc.
+    // state u are on start state = 0, then next states are 1 more etc.
     public static int calculateG(String state)
     {
         return 0;
     }
 
-    public static void showState(String state)
+    public static void showState(int[][] state)
     {
-        String output = "";
-        for(int i = 0; i < state.length(); i += 2)
+        for(int i = 0; i < state.length; i++)
         {
-            output += state.charAt(i) + " ";
-            if(i % 3 == 1)
-                output += "\n";
+            for(int j = 0; j < state[i].length; j++)
+            {
+                System.out.print(state[i][j] + " ");
+            }
+            System.out.println();
         }
-        JOptionPane.showMessageDialog(null, output);
     }
 }
