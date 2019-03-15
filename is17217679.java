@@ -41,9 +41,21 @@ public class is17217679
     }
 
     // Numbers out of place or how far each number is from its final state
-    public static int calculateH(String state)
+    public static int calculateH(int[][] state, int[][] finalState)
     {
-        return 0;
+        int counter = 0;
+
+        for(int i = 0; i < state.length; i++)
+        {
+            for(int j = 0; j < state[i].length; j++)
+            {
+                if(state[i][j] != finalState[i][j])
+                {
+                    counter++;
+                }
+            }
+        }
+    return counter;
     }
 
     // This might not need to be here, g is which 
