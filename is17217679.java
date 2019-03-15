@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 import javax.swing.JOptionPane;
 
 /*  Damian Skrzypek - 17217679
@@ -49,7 +51,28 @@ public class is17217679
 
     public static boolean validateInput(String in)
     {
-        return true;
+        ArrayList<Integer> numbers = new ArrayList<>();
+        String[] temp = in.split("\\s");
+        ArrayList<String> checkIndividual = new ArrayList<>();
+
+        if(temp.length == 9)
+        {
+            for(int i = 0; i < temp.length;i++)
+            {
+                numbers.add(i);
+            }
+            for(int i = 0; i < temp.length;i++)
+                 if(numbers.contains(Integer.parseInt(temp[i])) && (!checkIndividual.contains(temp[i])))
+                 {
+                    checkIndividual.add(temp[i]);
+                 }
+            
+            if(checkIndividual.size() == numbers.size())
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     // At most 4 possible movements print them into console
@@ -59,9 +82,21 @@ public class is17217679
     }
 
     // Numbers out of place or how far each number is from its final state
-    public static int calculateH(String state)
+    public static int calculateH(int[][] state, int[][] finalState)
     {
-        return 0;
+        int counter = 0;
+
+        for(int i = 0; i < state.length; i++)
+        {
+            for(int j = 0; j < state[i].length; j++)
+            {
+                if(state[i][j] != finalState[i][j])
+                {
+                    counter++;
+                }
+            }
+        }
+    return counter;
     }
 
     // This might not need to be here, g is which 
