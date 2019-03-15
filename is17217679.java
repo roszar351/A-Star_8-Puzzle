@@ -29,6 +29,24 @@ public class is17217679
         showState(endState);
     }
 
+    public static int[] convertInput(String in) 
+    {
+        String [] temp = new int[9];
+        temp = (in.split(" "));
+        int count = 0;
+
+        int [][] board = new int [3][3];
+
+        for(int i = 0; i < 3; i++)
+            for(int j = 0; j < 3; j++){
+                board[i][j] = Integer.parseInt(temp [count]);
+                count++;
+            }
+                
+            
+
+    }
+
     public static boolean validateInput(String in)
     {
         return true;
