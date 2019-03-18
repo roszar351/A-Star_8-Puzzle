@@ -19,18 +19,24 @@ public class is17217679
         int[][] initialState;
 
         startState = JOptionPane.showInputDialog("Enter the start state: ");
-        while(!validateInput(startState))
+        while(startState != null && !validateInput(startState))
             startState = JOptionPane.showInputDialog("Wrong format, renter the start state: ");
 
-        endState = JOptionPane.showInputDialog("Enter the end state: ");
-        while(!validateInput(endState))
-            endState = JOptionPane.showInputDialog("Wrong format, renter the end state: ");
+        if(startState != null)
+        {
+            endState = JOptionPane.showInputDialog("Enter the end state: ");
+            while(endState != null && !validateInput(endState))
+                endState = JOptionPane.showInputDialog("Wrong format, renter the end state: ");
 
-        initialState = convertInput(startState);
-        finalState = convertInput(endState);
+            if(endState != null)
+            {
+                initialState = convertInput(startState);
+                finalState = convertInput(endState);
 
-        possibleMovements(initialState);
-        possibleMovements(finalState);
+                possibleMovements(initialState);
+                possibleMovements(finalState);
+            }
+        }
     }
 
     public static int[][] convertInput(String in) 
@@ -53,6 +59,9 @@ public class is17217679
 
     public static boolean validateInput(String in)
     {
+        if(in == null)
+            return false;
+
         ArrayList<Integer> numbers = new ArrayList<>();
         String[] temp = in.split("\\s");
         ArrayList<String> checkIndividual = new ArrayList<>();
