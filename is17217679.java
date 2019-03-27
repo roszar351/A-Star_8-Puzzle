@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 
 import javax.swing.JOptionPane;
 
@@ -10,13 +11,203 @@ import javax.swing.JOptionPane;
 
 public class is17217679
 {   
-    private static int[][] finalState;
+    static class State implements Comparable<State>
+    {
+        private static int[][] endState;
+        private int[][] board;
+        private int gValue;
+        private int hValue;
+        private int fValue;
+        private State previousState;
 
+        State(int[][] b, int g, State previous)
+        {
+            board = b;
+            gValue = g;
+            hValue = calculateH();
+            fValue = gValue + hValue;
+            previousState = previous;
+        }
+
+        // Calculates the 'H' value, numbers out of place
+        private int calculateH()
+        {
+            int counter = 0;
+
+            for(int i = 0; i < board.length; i++)
+                for(int j = 0; j < board[i].length; j++)
+                    if(board[i][j] != endState[i][j])
+                        counter++;
+            
+            return counter;
+        }
+
+        public ArrayList<State> getPossibleMoves()
+        {
+            ArrayList<State> moves = new ArrayList<>();
+            boolean stop = false;
+            int i = 0, j = 0;
+
+            for(i = 0; i < board.length && !stop; i++)
+                for(j = 0; j < board[i].length && !stop; j++)
+                    stop = (board[i][j] == 0);
+            
+            i--;
+            j--;
+
+            int[][] tempBoard = new int[board.length][board[0].length];
+            copy2DArray(tempBoard);
+
+            if(i - 1 > -1)
+            {
+                tempBoard[i-1][j] = 0;
+                tempBoard[i][j] = board[i-1][j];
+                moves.add(new State(tempBoard, gValue + 1, this));
+                tempBoard = new int[board.length][board[0].length];
+                copy2DArray(tempBoard);
+            }
+            if(i + 1 < 3)
+            {
+                tempBoard[i+1][j] = 0;
+                tempBoard[i][j] = board[i+1][j];
+                moves.add(new State(tempBoard, gValue + 1, this));
+                tempBoard = new int[board.length][board[0].length];
+                copy2DArray(tempBoard);
+            }
+            if(j - 1 > -1)
+            {
+                tempBoard[i][j-1] = 0;
+                tempBoard[i][j] = board[i][j-1];
+                moves.add(new State(tempBoard, gValue + 1, this));
+                tempBoard = new int[board.length][board[0].length];
+                copy2DArray(tempBoard);
+            }
+            if(j + 1 < 3)
+            {
+                tempBoard[i][j+1] = 0;
+                tempBoard[i][j] = board[i][j+1];
+                moves.add(new State(tempBoard, gValue + 1, this));
+                tempBoard = new int[board.length][board[0].length];
+                copy2DArray(tempBoard);
+            }
+
+            return moves;
+        }
+
+        private void copy2DArray(int[][] ar)
+        {
+            for(int i = 0; i < board.length; i++)
+                for(int j = 0; j < board[i].length; j++)
+                    ar[i][j] = board[i][j];
+        }
+
+        // Prints out possible moves, max 4
+        public void printPossibleMovements()
+        {
+            boolean stop = false;
+            int i = 0, j = 0;
+
+            for(i = 0; i < board.length && !stop; i++)
+                for(j = 0; j < board[i].length && !stop; j++)
+                    stop = (board[i][j] == 0);
+            
+            i--;
+            j--;
+
+            if(i - 1 > -1)
+                System.out.println("-> " + board[i-1][j] + " to the south");
+            if(i + 1 < 3)
+                System.out.println("-> " + board[i+1][j] + " to the north");
+            if(j - 1 > -1)
+                System.out.println("-> " + board[i][j - 1] + " to the east");
+            if(j + 1 < 3)
+                System.out.println("-> " + board[i][j + 1] + " to the west");
+
+            System.out.println("Value of h: " + hValue + "\n");
+        }
+
+        // Returns the board state as a string
+        public String toString()
+        {
+            String temp = "";
+            for(int i = 0; i < board.length; i++)
+            {
+                for(int j = 0; j < board[i].length; j++)
+                    temp += board[i][j] + " ";
+                
+                temp += "\n";
+            }
+            return temp;
+        }
+
+        public boolean isEqual(State s)
+        {
+            int[][] temp = s.getBoard();
+            
+            for(int i = 0; i < temp.length; i++)
+                for(int j = 0; j < temp[i].length; j++)
+                    if(board[i][j] != temp[i][j])
+                        return false;
+
+            return true;
+        }
+
+        // Used for sorting, sorts by the 'f' value
+        public int compareTo(State s)
+        {
+            return this.fValue - s.fValue;
+        }
+
+        public static void printEndState()
+        {
+            for(int i = 0; i < endState.length; i++)
+            {
+                for(int j = 0; j < endState[i].length; j++)
+                    System.out.print(endState[i][j] + " ");
+                
+                System.out.println();
+            }
+        }
+
+        public static void setEndState(int[][] e)
+        {
+            endState = e;
+        }
+
+        public static int[][] getEndState()
+        {
+            return endState;
+        }
+
+        public int[][] getBoard()
+        {
+            return board;
+        }
+
+        public int getG()
+        {
+            return gValue;
+        }
+
+        public int getH()
+        {
+            return hValue;
+        }
+
+        public int getf()
+        {
+            return fValue;
+        }
+
+        public State getPreviousState()
+        {
+            return previousState;
+        }
+    }
     public static void main(String[] args)
     {
         String startState = "";
         String endState = "";
-        int[][] initialState;
 
         startState = JOptionPane.showInputDialog("Enter the start state: ");
         while(startState != null && !validateInput(startState))
@@ -30,11 +221,52 @@ public class is17217679
 
             if(endState != null)
             {
-                initialState = convertInput(startState);
-                finalState = convertInput(endState);
+                State.setEndState(convertInput(endState));
+                // Set currentstate to the starting state
 
-                possibleMovements(initialState);
-                possibleMovements(finalState);
+                ArrayList<State> openSet = new ArrayList<>();
+                ArrayList<State> closedSet = new ArrayList<>();
+                State currentState = null;
+                boolean found = false;
+
+                openSet.add(new State(convertInput(startState), 0, null));
+                System.out.println("Finding solution for:\n" + openSet.get(0));
+
+                while(!openSet.isEmpty() && !found)
+                {
+                    Collections.sort(openSet);
+                    currentState = openSet.get(0);
+                    if(currentState.getH() == 0)
+                        found = true;
+                    else
+                    {
+                        openSet.remove(0);
+                        closedSet.add(currentState);
+                        ArrayList<State> possibleMoves = currentState.getPossibleMoves();
+                        for(int i = 0; i < possibleMoves.size(); i++)
+                        {
+                            State temp = possibleMoves.get(i);
+                            if(!inSet(closedSet, temp) && !inSet(openSet, temp))
+                                openSet.add(temp);
+                        }
+                    }
+                }
+
+                if(!found)
+                    System.out.println("Solution not found!");
+                else
+                {
+                    int moves = 0;
+                    System.out.println("Solution found!");
+                    while(currentState.getPreviousState() != null)
+                    {
+                        System.out.println(currentState);
+                        currentState = currentState.getPreviousState();
+                        moves++;
+                    }
+                    System.out.println(currentState + "\nIt took " + moves + " moves.");
+                }
+                
             }
         }
     }
@@ -82,59 +314,12 @@ public class is17217679
         return false;
     }
 
-    // At most 4 possible movements print them into console
-    public static void possibleMovements(int[][] state)
+    public static boolean inSet(ArrayList<State> set, State s)
     {
-        boolean stop = false;
-        showState(state);
-        int i = 0, j = 0;
+        for(int i = 0; i < set.size(); i++)
+            if(s.isEqual(set.get(i)))
+                return true;
 
-        for(i = 0; i < state.length && !stop; i++)
-            for(j = 0; j < state[i].length && !stop; j++)
-                stop = (state[i][j] == 0);
-        
-        i--;
-        j--;
-
-        if(i - 1 > -1)
-            System.out.println("-> " + state[i-1][j] + " to the south");
-        if(i + 1 < 3)
-            System.out.println("-> " + state[i+1][j] + " to the north");
-        if(j - 1 > -1)
-            System.out.println("-> " + state[i][j - 1] + " to the east");
-        if(j + 1 < 3)
-            System.out.println("-> " + state[i][j + 1] + " to the west");
-
-        System.out.println("Value of h: " + calculateH(state) + "\n");
-    }
-
-    // Numbers out of place or how far each number is from its final state
-    public static int calculateH(int[][] state)
-    {
-        int counter = 0;
-
-        for(int i = 0; i < state.length; i++)
-            for(int j = 0; j < state[i].length; j++)
-                if(state[i][j] != finalState[i][j])
-                    counter++;
-        
-        return counter;
-    }
-
-    // This might not need to be here, g is which 
-    // state u are on start state = 0, then next states are 1 more etc.
-    public static int calculateG(String state)
-    {
-        return 0;
-    }
-
-    public static void showState(int[][] state)
-    {
-        for(int i = 0; i < state.length; i++)
-        {
-            for(int j = 0; j < state[i].length; j++)
-                System.out.print(state[i][j] + " ");
-            System.out.println();
-        }
+        return false;
     }
 }
