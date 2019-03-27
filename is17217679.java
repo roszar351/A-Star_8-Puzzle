@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.Collections;
-
 import javax.swing.JOptionPane;
 
 /*  Damian Skrzypek - 17217679
@@ -270,7 +269,7 @@ public class is17217679
             }
         }
     }
-
+//Change so it can take a bigger matrix, i.e. 8,15 puzzle
     public static int[][] convertInput(String in) 
     {
         String [] temp;
@@ -288,7 +287,7 @@ public class is17217679
 
         return board;
     }
-
+//Change so it can take either 8 or 15 puzzle.
     public static boolean validateInput(String in)
     {
         if(in == null)
