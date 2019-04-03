@@ -274,15 +274,20 @@ public class is17217679
                     System.out.println("Solution not found!");
                 else
                 {
-                    int moves = 0;
+                    ArrayList<State> path = new ArrayList<>();
                     System.out.println("Solution found!");
+                    System.out.println("-------END-------");
                     while(currentState.getPreviousState() != null)
                     {
-                        System.out.println(currentState);
+                        path.add(currentState);
                         currentState = currentState.getPreviousState();
-                        moves++;
                     }
-                    System.out.println(currentState + "\nIt took " + moves + " moves.");
+                    for(int i = 0 ; i < path.size(); i++)
+                    {
+                        System.out.println("Move " + (path.size() - i) + ":\n" + path.get(i));
+                    }
+                    System.out.println("Scroll up for moves\n-------Start-------\nInitial State:\n" + currentState);
+                    System.out.println("\nIt took " + path.size() + " moves.");
                 }
                 
             }
