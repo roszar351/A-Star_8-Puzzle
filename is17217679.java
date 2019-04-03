@@ -71,7 +71,7 @@ public class is17217679
                 tempBoard = new int[board.length][board[0].length];
                 copy2DArray(tempBoard);
             }
-            if(i + 1 < 3)
+            if(i + 1 < board.length)
             {
                 tempBoard[i+1][j] = 0;
                 tempBoard[i][j] = board[i+1][j];
@@ -87,7 +87,7 @@ public class is17217679
                 tempBoard = new int[board.length][board[0].length];
                 copy2DArray(tempBoard);
             }
-            if(j + 1 < 3)
+            if(j + 1 < board.length)
             {
                 tempBoard[i][j+1] = 0;
                 tempBoard[i][j] = board[i][j+1];
@@ -121,11 +121,11 @@ public class is17217679
 
             if(i - 1 > -1)
                 System.out.println("-> " + board[i-1][j] + " to the south");
-            if(i + 1 < 3)
+            if(i + 1 < board.length)
                 System.out.println("-> " + board[i+1][j] + " to the north");
             if(j - 1 > -1)
                 System.out.println("-> " + board[i][j - 1] + " to the east");
-            if(j + 1 < 3)
+            if(j + 1 < board.length)
                 System.out.println("-> " + board[i][j + 1] + " to the west");
 
             System.out.println("Value of h: " + hValue + "\n");
@@ -215,7 +215,7 @@ public class is17217679
         if(startState != null)
         {
             endState = JOptionPane.showInputDialog("Enter the end state: ");
-            while(endState != null && !validateInput(endState))
+            while(endState != null && !validateInput(endState, startState.length()))
                 endState = JOptionPane.showInputDialog("Wrong format, renter the end state: ");
 
             if(endState != null)
@@ -317,7 +317,32 @@ public class is17217679
         String[] temp = in.split("\\s");
         ArrayList<String> checkIndividual = new ArrayList<>();
 
-        if(temp.length == 9 || temp.length == 15)
+        if(temp.length == 9 || temp.length == 16)
+        {
+            for(int i = 0; i < temp.length;i++)
+                numbers.add(i);
+            
+            for(int i = 0; i < temp.length;i++)
+                if(numbers.contains(Integer.parseInt(temp[i])) && (!checkIndividual.contains(temp[i])))
+                    checkIndividual.add(temp[i]);
+            
+            if(checkIndividual.size() == numbers.size())
+                return true;
+        }
+
+        return false;
+    }
+
+    public static boolean validateInput(String in, int s)
+    {
+        if(in == null || in.length() != s)
+            return false;
+
+        ArrayList<Integer> numbers = new ArrayList<>();
+        String[] temp = in.split("\\s");
+        ArrayList<String> checkIndividual = new ArrayList<>();
+
+        if(temp.length == 9 || temp.length == 16)
         {
             for(int i = 0; i < temp.length;i++)
                 numbers.add(i);
