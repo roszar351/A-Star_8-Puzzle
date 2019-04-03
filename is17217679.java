@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Collections;
 
 import javax.swing.JOptionPane;
 
@@ -295,11 +294,12 @@ public class is17217679
         String [] temp;
         temp = (in.split(" "));
         int count = 0;
+        int size = (int)Math.sqrt(temp.length);
 
-        int [][] board = new int [3][3];
+        int [][] board = new int [size][size];
 
-        for(int i = 0; i < 3; i++)
-            for(int j = 0; j < 3; j++)
+        for(int i = 0; i < size; i++)
+            for(int j = 0; j < size; j++)
             {
                 board[i][j] = Integer.parseInt(temp [count]);
                 count++;
@@ -317,7 +317,7 @@ public class is17217679
         String[] temp = in.split("\\s");
         ArrayList<String> checkIndividual = new ArrayList<>();
 
-        if(temp.length == 9)
+        if(temp.length == 9 || temp.length == 15)
         {
             for(int i = 0; i < temp.length;i++)
                 numbers.add(i);
