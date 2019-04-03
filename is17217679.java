@@ -11,7 +11,7 @@ import javax.swing.JOptionPane;
 
 public class is17217679
 {   
-    static class State implements Comparable<State>
+    static class State
     {
         private static int[][] endState;
         private int[][] board;
@@ -29,15 +29,21 @@ public class is17217679
             previousState = previous;
         }
 
-        // Calculates the 'H' value, numbers out of place
+        // Calculates the 'H' value
         private int calculateH()
         {
             int counter = 0;
 
             for(int i = 0; i < board.length; i++)
-                for(int j = 0; j < board[i].length; j++)
-                    if(board[i][j] != endState[i][j])
-                        counter++;
+                for(int j = 0; j < board.length; j++)
+                    for(int x = 0; x < board.length; x++)
+                        for(int y = 0; y < board.length; y++)
+                            if(board[i][j] == endState[x][y] && board[i][j] != 0)
+                            {
+                                counter += Math.abs(i - x) + Math.abs(j - y);
+                                x = board.length;
+                                y = board.length;
+                            }
             
             return counter;
         }
@@ -152,12 +158,6 @@ public class is17217679
             return true;
         }
 
-        // Used for sorting, sorts by the 'f' value
-        public int compareTo(State s)
-        {
-            return this.fValue - s.fValue;
-        }
-
         public static void printEndState()
         {
             for(int i = 0; i < endState.length; i++)
@@ -222,7 +222,6 @@ public class is17217679
             if(endState != null)
             {
                 State.setEndState(convertInput(endState));
-                // Set currentstate to the starting state
 
                 ArrayList<State> openSet = new ArrayList<>();
                 ArrayList<State> closedSet = new ArrayList<>();
@@ -234,13 +233,33 @@ public class is17217679
 
                 while(!openSet.isEmpty() && !found)
                 {
-                    Collections.sort(openSet);
-                    currentState = openSet.get(0);
+                    int index = 0;
+                    int lowestf = openSet.get(0).getf();
+                    int lowestg = openSet.get(0).getG();
+
+                    for(int i = 1; i < openSet.size(); i++)
+                    {
+                        if(openSet.get(i).getf() < lowestf)
+                        {
+                            index = i;
+                            lowestf = openSet.get(i).getf();
+                        }
+                        else if(openSet.get(i).getf() == lowestf)
+                        {
+                            if(openSet.get(i).getG() < lowestg)
+                            {
+                                lowestg = openSet.get(i).getG();
+                                index = i;
+                            }
+                        }
+                    }
+
+                    currentState = openSet.get(index);
                     if(currentState.getH() == 0)
                         found = true;
                     else
                     {
-                        openSet.remove(0);
+                        openSet.remove(index);
                         closedSet.add(currentState);
                         ArrayList<State> possibleMoves = currentState.getPossibleMoves();
                         for(int i = 0; i < possibleMoves.size(); i++)
