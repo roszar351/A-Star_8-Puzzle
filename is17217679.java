@@ -2,7 +2,9 @@ import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
-/*  Damian Skrzypek - 17217679
+/*
+ *  Can solve both 8 and 15 puzzle
+ *  Damian Skrzypek - 17217679
  *  Darragh Kelly   - 17235545
  *  Eoghan Russell  - 17202124
  *  Pawel Ostach    - 17214211
@@ -208,13 +210,13 @@ public class is17217679
         String startState = "";
         String endState = "";
 
-        startState = JOptionPane.showInputDialog("Enter the start state: ");
+        startState = JOptionPane.showInputDialog("Enter the start state(8 or 15 puzzle): ");
         while(startState != null && !validateInput(startState))
             startState = JOptionPane.showInputDialog("Wrong format, renter the start state: ");
 
         if(startState != null)
         {
-            endState = JOptionPane.showInputDialog("Enter the end state: ");
+            endState = JOptionPane.showInputDialog("Enter the end state(must be same type of puzzle as start state): ");
             while(endState != null && !validateInput(endState, startState.length()))
                 endState = JOptionPane.showInputDialog("Wrong format, renter the end state: ");
 
